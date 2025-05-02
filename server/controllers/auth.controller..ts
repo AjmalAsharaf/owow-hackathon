@@ -15,7 +15,17 @@ export const signup = async (req: Request, res: Response): Promise<any> => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ name, email, password: hashedPassword, role });
     await newUser.save();
-    sendResponse(res, 201, { message: "User registered successfully" });
+    const payload = {
+      userId: newUser._id,
+      role: newUser.role, 
+    };
+    const token = jwt.sign(payload, process.env.JWT_SECRET!, {
+      expiresIn: "3h",
+    });
+    sendResponse(res, 201, {
+      message: "User registered successfully",
+      data: { token },
+    });
   } catch (error) {
     sendResponse(res, 500, {
       message: "Server error",
@@ -36,10 +46,10 @@ export const login = async (req: Request, res: Response): Promise<any> => {
       return sendResponse(res, 400, { message: "Invalid credentials" });
     const payload = {
       userId: user._id,
-      role: user.role, // Ensure role is included in the JWT payload
+      role: user.role,
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET!, {
-      expiresIn:"3h",
+      expiresIn: "3h",
     });
     sendResponse(res, 200, { message: "Login successful", data: { token } });
   } catch (error) {
