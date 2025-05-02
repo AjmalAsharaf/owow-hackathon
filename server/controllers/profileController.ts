@@ -8,15 +8,21 @@ export const createProfile = async (req: AuthenticatedRequest, res: Response): P
   const { skills, experience, resume } = req.body;
 
   try {
-    const profile = new Profile({
-      user: req.user?.userId, // Link to the authenticated user
-      skills,
-      experience,
-      resume,
-    });
+    const userId = req.user?.userId;
+    if (!userId) {
+      sendResponse(res, 401, { message: "Unauthorized" });
+      return;
+    }
+    const updatedProfile = await Profile.findOneAndUpdate(
+      { user: userId },
+      { $set: { skills, experience, resume } },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
 
-    await profile.save();
-    sendResponse(res, 201, { message: "Profile created successfully", data: profile });
+    sendResponse(res, 200, {
+      message: "Profile created or updated successfully",
+      data: updatedProfile,
+    });
   } catch (error) {
     sendResponse(res, 500, { message: "Server error",  error: (error as Error).message});
   }
