@@ -5,6 +5,7 @@ import helmet from "helmet";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
 import authRoutes from './routes/authRoutes';
+import profileRoutes from "./routes/profileRoutes";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(limiter);
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use("/api/profile", profileRoutes)
 
 // Connect to MongoDB
 mongoose

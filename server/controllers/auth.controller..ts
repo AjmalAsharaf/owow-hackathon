@@ -9,8 +9,7 @@ export const signup = async (req: Request, res: Response):  Promise<any> => {
 
   try {
     const existingUser = await User.findOne({ email });
-    if (existingUser)
-      return res.status(400).json({ message: "Email already in use" });
+    if (existingUser) return sendResponse(res, 400, {message:"Email already in use" })
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ name, email, password: hashedPassword, role });
@@ -23,6 +22,7 @@ export const signup = async (req: Request, res: Response):  Promise<any> => {
 };
 
 export const login = async (req: Request, res: Response):  Promise<any>=> {
+  console.log('reaching here')
   const { email, password } = req.body;
 
   try {
