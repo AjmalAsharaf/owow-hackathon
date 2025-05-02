@@ -1,4 +1,3 @@
-// utils/responseBuilder.ts
 import { Response } from "express";
 
 interface ResponseData {

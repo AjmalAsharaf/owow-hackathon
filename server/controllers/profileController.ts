@@ -1,4 +1,3 @@
-// controllers/profileController.ts
 import { Response } from "express";
 import Profile from "../models/Profile";
 import { sendResponse } from "../utils/responseBuilder";

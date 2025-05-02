@@ -1,4 +1,3 @@
-// routes/jobRoutes.ts
 import express from "express";
 import { getAllJobs, postJob, matchJobs } from "../controllers/jobController";
 import { authenticate } from "../middleware/auth";  
