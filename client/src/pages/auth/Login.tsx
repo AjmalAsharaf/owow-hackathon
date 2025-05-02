@@ -55,8 +55,10 @@ const Login: React.FC = () => {
       });
 
       console.log("Login success:", res.data);
-       saveToken(res.data.token);
-       navigate("/dashboard")
+      const token = res.data?.data?.token;
+      console.log("token", token, "typeof", typeof token);
+       saveToken(token);
+       navigate("/candidate-profile")
     } catch (err: any) {
       setErrorMessage(err.response?.data?.message || "Login failed");
     } finally {

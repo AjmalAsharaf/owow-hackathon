@@ -73,8 +73,9 @@ const SignUp: React.FC = () => {
         role,
       });
       console.log(response.data);
-      saveToken(response.data.token);
-      navigate("/dashboard")
+      const token = response?.data?.data?.token;
+      saveToken(token);
+      navigate("/candidate-profile")
 
     } catch (error) {
       setErrorMessage(error.response?.data?.message || "Sign-up failed");
