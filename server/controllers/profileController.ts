@@ -29,7 +29,7 @@ export const createProfile = async (req: AuthenticatedRequest, res: Response): P
 
 export const getProfile = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const profile = await Profile.findOne({ user: req.user?.userId });
+    const profile = await Profile.findOne({ user: req.user?.userId }).populate('user', 'name')
     if (!profile) {
       sendResponse(res, 404, { message: "Profile not found" });
       return;
