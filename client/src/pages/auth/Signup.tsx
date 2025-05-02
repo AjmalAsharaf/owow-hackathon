@@ -77,7 +77,8 @@ const SignUp: React.FC = () => {
       saveToken(token);
       navigate("/candidate-profile")
 
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       setErrorMessage(error.response?.data?.message || "Sign-up failed");
     } finally {
       setIsLoading(false);
