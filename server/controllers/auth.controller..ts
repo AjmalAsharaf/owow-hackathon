@@ -17,7 +17,6 @@ export const signup = async (req: Request, res: Response): Promise<any> => {
     await newUser.save();
     sendResponse(res, 201, { message: "User registered successfully" });
   } catch (error) {
-    console.error("Signup error:", error);
     sendResponse(res, 500, {
       message: "Server error",
       error: (error as Error).message,
@@ -26,7 +25,6 @@ export const signup = async (req: Request, res: Response): Promise<any> => {
 };
 
 export const login = async (req: Request, res: Response): Promise<any> => {
-  console.log("reaching here");
   const { email, password } = req.body;
 
   try {
@@ -41,7 +39,7 @@ export const login = async (req: Request, res: Response): Promise<any> => {
       role: user.role, // Ensure role is included in the JWT payload
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET!, {
-      expiresIn: "1h",
+      expiresIn:"3h",
     });
     sendResponse(res, 200, { message: "Login successful", data: { token } });
   } catch (error) {
