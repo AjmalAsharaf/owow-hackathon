@@ -6,7 +6,7 @@ import { createProfile, getProfile } from "../controllers/profileController";
 
 const router = express.Router();
 
-router.post("/", authenticate,validate(createProfileSchema), createProfile);
-router.get("/", authenticate, getProfile);
+router.post("/", authenticate(),validate(createProfileSchema), createProfile);
+router.get("/", authenticate(), getProfile);
 
 export default router;

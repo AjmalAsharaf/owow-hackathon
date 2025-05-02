@@ -2,14 +2,15 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
-import { sendResponse } from "../utils/responseBuilder"; 
+import { sendResponse } from "../utils/responseBuilder";
 
-export const signup = async (req: Request, res: Response):  Promise<any> => {
+export const signup = async (req: Request, res: Response): Promise<any> => {
   const { name, email, password, role } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
-    if (existingUser) return sendResponse(res, 400, {message:"Email already in use" })
+    if (existingUser)
+      return sendResponse(res, 400, { message: "Email already in use" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ name, email, password: hashedPassword, role });
@@ -17,12 +18,15 @@ export const signup = async (req: Request, res: Response):  Promise<any> => {
     sendResponse(res, 201, { message: "User registered successfully" });
   } catch (error) {
     console.error("Signup error:", error);
-     sendResponse(res, 500, { message: "Server error",  error: (error as Error).message });
+    sendResponse(res, 500, {
+      message: "Server error",
+      error: (error as Error).message,
+    });
   }
 };
 
-export const login = async (req: Request, res: Response):  Promise<any>=> {
-  console.log('reaching here')
+export const login = async (req: Request, res: Response): Promise<any> => {
+  console.log("reaching here");
   const { email, password } = req.body;
 
   try {
@@ -30,12 +34,21 @@ export const login = async (req: Request, res: Response):  Promise<any>=> {
     if (!user) return sendResponse(res, 400, { message: "User not found" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return sendResponse(res, 400, { message: "Invalid credentials" });
-
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: "1h" });
+    if (!isMatch)
+      return sendResponse(res, 400, { message: "Invalid credentials" });
+    const payload = {
+      userId: user._id,
+      role: user.role, // Ensure role is included in the JWT payload
+    };
+    const token = jwt.sign(payload, process.env.JWT_SECRET!, {
+      expiresIn: "1h",
+    });
     sendResponse(res, 200, { message: "Login successful", data: { token } });
   } catch (error) {
     console.error("Login error:", error);
-    sendResponse(res, 500, { message: "Server error",  error: (error as Error).message });
+    sendResponse(res, 500, {
+      message: "Server error",
+      error: (error as Error).message,
+    });
   }
 };

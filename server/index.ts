@@ -6,6 +6,7 @@ import cors from "cors";
 import rateLimit from "express-rate-limit";
 import authRoutes from './routes/authRoutes';
 import profileRoutes from "./routes/profileRoutes";
+import jobRoutes from "./routes/jobRoutes";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use(limiter);
 // Routes
 app.use('/api/auth', authRoutes);
 app.use("/api/profile", profileRoutes)
+app.use("/api/job", jobRoutes)
 
 // Connect to MongoDB
 mongoose
